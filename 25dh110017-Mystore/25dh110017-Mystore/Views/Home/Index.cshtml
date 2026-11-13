@@ -1,0 +1,106 @@
+﻿@model _25dh110017_Mystore.Models.ViewModel.HomeProductVM
+
+@{
+    ViewBag.Title = "Trang chủ - ARIS SHOP";
+    int? currentCategory = ViewBag.SelectedCategory as int?;
+}
+
+<!-- KHUNG GIAO DIỆN TỔNG THỂ CYBERPUNK -->
+<div class="container my-4" style="max-width: 1200px;">
+    <div class="row justify-content-center">
+        <div class="col-lg-12">
+
+            <!-- 1. THANH DANH MỤC PHÂN LOẠI SẢN PHẨM -->
+            <div class="mb-4">
+                <div class="d-flex align-items-center justify-content-center flex-wrap gap-2 py-3 px-3 rounded cyber-panel">
+                    <span class="text-info fw-bold me-2" style="text-shadow: 0 0 8px #00f2fe;">📂 Danh mục:</span>
+
+                    <a href="@Url.Action("Index", "Home")"
+                       class="btn btn-sm @(currentCategory == null || currentCategory == 0 ? "btn-outline-info active" : "btn-outline-secondary text-light")">
+                        Tất cả
+                    </a>
+
+                    <a href="@Url.Action("Index", "Home", new { categoryId = 1 })"
+                       class="btn btn-sm @(currentCategory == 1 ? "btn-outline-info active" : "btn-outline-secondary text-light")">
+                        Kinh Tế - Kỹ Năng
+                    </a>
+
+                    <a href="@Url.Action("Index", "Home", new { categoryId = 2 })"
+                       class="btn btn-sm @(currentCategory == 2 ? "btn-outline-info active" : "btn-outline-secondary text-light")">
+                        Văn Học - Tiểu Thuyết
+                    </a>
+
+                    <a href="@Url.Action("Index", "Home", new { categoryId = 3 })"
+                       class="btn btn-sm @(currentCategory == 3 ? "btn-outline-info active" : "btn-outline-secondary text-light")">
+                        Tâm Lý Học
+                    </a>
+
+                    <a href="@Url.Action("Index", "Home", new { categoryId = 4 })"
+                       class="btn btn-sm @(currentCategory == 4 ? "btn-outline-info active" : "btn-outline-secondary text-light")">
+                        Lịch Sử - Xã Hội
+                    </a>
+
+                    <a href="@Url.Action("Index", "Home", new { categoryId = 5 })"
+                       class="btn btn-sm @(currentCategory == 5 ? "btn-outline-info active" : "btn-outline-secondary text-light")">
+                        Sách Văn Học
+                    </a>
+                </div>
+            </div>
+
+            <!-- 2. PHẦN TÌM KIẾM SẢN PHẨM -->
+            <section class="container searchProd mb-4">
+                <div class="text-center mb-3">
+                    <h2 class="text-info font-weight-bold">🔍 Tìm kiếm sản phẩm</h2>
+                </div>
+                @using (Html.BeginForm("Index", "Home", FormMethod.Get, new { @class = "row justify-content-center" }))
+                {
+                    <div class="col-md-9 col-lg-8">
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.SearchTerm, new
+                            {
+                                @class = "form-control form-control-lg bg-dark text-light border-secondary",
+                                placeholder = "Nhập từ khóa tìm kiếm (tên sách, tác giả)..."
+                            })
+                            <button type="submit" class="btn btn-info px-4 font-weight-bold" style="background: linear-gradient(135deg, #00f2fe 0%, #3b82f6 100%); border: none; color: #05070e;">
+                                Tìm kiếm
+                            </button>
+                        </div>
+                    </div>
+                }
+            </section>
+
+            <hr class="my-4 border-secondary opacity-25" />
+
+            <!-- 3. KHU VỰC HIỂN THỊ SẢN PHẨM -->
+            <div id="product-section" class="container">
+                @if (Model != null && ((Model.FeaturedProducts != null && Model.FeaturedProducts.Any()) || (Model.NewProducts != null && Model.NewProducts.Any())))
+                {
+                    <!-- Phần Sản phẩm nổi bật -->
+                    @Html.Partial("_PVFeatureProduct", Model)
+
+                    <hr class="my-5 border-secondary opacity-25" />
+
+                    <!-- Phần Sản phẩm mới -->
+                    @Html.Partial("_PVNewProduct", Model)
+                }
+                else
+                {
+                    <!-- Thông báo khi trống sản phẩm -->
+                    <div class="cyber-panel text-center my-4 p-4 shadow-sm rounded text-light" role="alert" style="background-color: #0b0f19 !important;">
+                        <h5 class="mb-1 text-info">Không tìm thấy sản phẩm nào phù hợp!</h5>
+                        <p class="mb-0 text-muted">Vui lòng thử lại với từ khóa khác hoặc lựa chọn danh mục sản phẩm khác.</p>
+                    </div>
+                }
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    .cyber-panel {
+        background-color: #0b0f19 !important;
+        border: 1px solid rgba(0, 242, 254, 0.3) !important;
+        box-shadow: 0 0 20px rgba(0, 242, 254, 0.1);
+    }
+</style>B

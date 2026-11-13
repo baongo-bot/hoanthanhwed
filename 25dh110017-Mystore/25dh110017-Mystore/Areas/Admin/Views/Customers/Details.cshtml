@@ -1,0 +1,44 @@
+﻿@model _25dh110017_Mystore.Models.Customer
+
+@{
+    ViewBag.Title = "Chi tiết khách hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid my-4">
+    <div class="card cyber-panel bg-dark text-light p-4" style="border: 1px solid rgba(0, 242, 254, 0.3); border-radius: 10px;">
+        <h2 class="text-info mb-4">Chi tiết khách hàng</h2>
+
+        <div>
+            <hr class="border-secondary" />
+            <dl class="row">
+                <dt class="col-sm-3 text-secondary">Mã khách hàng:</dt>
+                <dd class="col-sm-9 fw-bold">@Model.CustomerID</dd>
+
+                <dt class="col-sm-3 text-secondary">Tên khách hàng:</dt>
+                <dd class="col-sm-9">@Model.CustomerName</dd>
+
+                <dt class="col-sm-3 text-secondary">Số điện thoại:</dt>
+                <dd class="col-sm-9">@(Model.CustomerPhone ?? "Chưa cập nhật")</dd>
+
+                <dt class="col-sm-3 text-secondary">Email:</dt>
+                <dd class="col-sm-9">@(Model.CustomerEmail ?? "Chưa cập nhật")</dd>
+
+                <dt class="col-sm-3 text-secondary">Địa chỉ:</dt>
+                <dd class="col-sm-9">@(Model.CustomerAddress ?? "Chưa cập nhật")</dd>
+            </dl>
+        </div>
+
+        <div class="mt-4">
+            <a href="@Url.Action("Edit", new { id = Model.CustomerID })" class="btn btn-warning px-4 me-2">Sửa</a>
+            <a href="@Url.Action("Index")" class="btn btn-outline-secondary px-4">Quay lại danh sách</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .cyber-panel {
+        background-color: #0b0f19 !important;
+        box-shadow: 0 0 15px rgba(0, 242, 254, 0.1);
+    }
+</style>

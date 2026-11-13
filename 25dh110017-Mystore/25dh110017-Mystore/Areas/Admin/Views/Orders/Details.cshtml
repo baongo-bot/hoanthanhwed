@@ -1,0 +1,64 @@
+﻿@model _25dh110017_Mystore.Models.Order
+
+@{
+    ViewBag.Title = "Chi tiết đơn hàng #" + Model.OrderID;
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    var orderDetails = ViewBag.OrderDetails as List<_25dh110017_Mystore.Models.OrderDetail>;
+}
+
+<div class="container-fluid my-4">
+    <h2 class="text-info font-weight-bold mb-4">📄 Chi tiết Đơn hàng #@Model.OrderID</h2>
+
+    <div class="card bg-dark text-light p-4 shadow-lg mb-4" style="border: 1px solid rgba(0, 242, 254, 0.3); background-color: #0b0f19 !important;">
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Khách hàng:</strong> @(Model.Customer != null ? Model.Customer.CustomerName : "Không xác định")</p>
+                <p><strong>Số điện thoại:</strong> @(Model.Customer != null ? Model.Customer.CustomerPhone : "N/A")</p>
+                <p><strong>Ngày đặt hàng:</strong> @Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Địa chỉ giao hàng:</strong> @Model.AddressDelivery</p>
+                <p><strong>Trạng thái:</strong> <span class="badge bg-warning text-dark">@Model.PaymentStatus</span></p>
+                <p><strong>Tổng giá trị:</strong> <span class="text-danger font-weight-bold">@string.Format("{0:N0} VNĐ", Model.TotalAmount)</span></p>
+            </div>
+        </div>
+
+        <h4 class="text-info mt-4 mb-3" style="font-size: 18px;">🛒 Danh sách sản phẩm trong đơn</h4>
+        <div class="table-responsive">
+            <table class="table table-dark table-hover table-bordered align-middle" style="border-color: rgba(0, 242, 254, 0.2);">
+                <thead>
+                    <tr class="text-info">
+                        <th>Tên sản phẩm</th>
+                        <th>Đơn giá</th>
+                        <th>Số lượng</th>
+                        <th>Thành tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (orderDetails != null && orderDetails.Any())
+                    {
+                        foreach (var detail in orderDetails)
+                        {
+                            <tr>
+                                <td>@(detail.Product != null ? detail.Product.ProductName : "Sản phẩm")</td>
+                                <td>@string.Format("{0:N0} VNĐ", detail.UnitPrice)</td>
+                                <td>@detail.Quantity</td>
+                                <td class="text-danger font-weight-bold">@string.Format("{0:N0} VNĐ", detail.UnitPrice * detail.Quantity)</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center text-muted">Không có sản phẩm nào trong chi tiết đơn hàng.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-4 pt-3 border-top border-secondary">
+            @Html.ActionLink("← Quay lại danh sách đơn hàng", "Index", null, new { @class = "btn btn-outline-light btn-sm" })
+        </div>
+    </div>
+</div>

@@ -1,0 +1,83 @@
+﻿@model IEnumerable<_25dh110017_Mystore.Models.Order>
+
+@{
+    ViewBag.Title = "Quản lý đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid my-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-info font-weight-bold">📦 Quản lý đơn hàng</h2>
+    </div>
+
+    <div class="card cyber-panel bg-dark text-light p-3" style="border: 1px solid rgba(0, 242, 254, 0.3); border-radius: 10px;">
+        <div class="table-responsive">
+            <table class="table table-dark table-hover table-bordered align-middle mb-0">
+                <thead>
+                    <tr class="text-info">
+                        <th class="text-center" style="width: 80px;">Mã ĐH</th>
+                        <th>Tên khách hàng</th>
+                        <th>Ngày đặt hàng</th>
+                        <th>Tổng tiền</th>
+                        <th class="text-center">Trạng thái</th>
+                        <th class="text-center" style="width: 280px;">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="text-center font-weight-bold">@item.OrderID</td>
+                                <td>@(item.Customer != null ? item.Customer.CustomerName : "Khách vãng lai")</td>
+                                <td>@item.OrderDate.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td class="text-warning font-weight-bold">
+                                    @string.Format("{0:N0} đ", item.TotalAmount)
+                                </td>
+                                <td class="text-center">
+                                    @if (item.PaymentStatus == "Đang xử lý" || item.PaymentStatus == "Pending")
+                                    {
+                                        <span class="badge bg-warning text-dark">Đang xử lý</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success">@item.PaymentStatus</span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <!-- Nút xác nhận nhanh cho đơn đang chờ -->
+                                    @if (item.PaymentStatus == "Đang xử lý" || item.PaymentStatus == "Pending")
+                                    {
+                                        using (Html.BeginForm("ConfirmOrder", "Orders", new { id = item.OrderID }, FormMethod.Post, new { @style = "display:inline;" }))
+                                        {
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-sm btn-success me-1" title="Xác nhận đơn này">Xác nhận</button>
+                                        }
+                                    }
+
+                                    <a href="@Url.Action("Details", "Orders", new { id = item.OrderID })" class="btn btn-sm btn-outline-info me-1">Chi tiết</a>
+                                    <a href="@Url.Action("Edit", "Orders", new { id = item.OrderID })" class="btn btn-sm btn-outline-warning me-1">Sửa</a>
+                                    <a href="@Url.Action("Delete", "Orders", new { id = item.OrderID })" class="btn btn-sm btn-outline-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa đơn hàng này không?');">Xóa</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-4">Chưa có dữ liệu đơn hàng nào trong hệ thống.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .cyber-panel {
+        background-color: #0b0f19 !important;
+        box-shadow: 0 0 15px rgba(0, 242, 254, 0.1);
+    }
+</style>

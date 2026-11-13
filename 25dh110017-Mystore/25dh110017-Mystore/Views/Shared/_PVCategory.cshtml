@@ -1,0 +1,21 @@
+﻿@model IEnumerable<_25dh110017_Mystore.Models.Category>
+
+<div class="container my-3">
+    <div class="p-3 bg-dark rounded border border-secondary shadow-sm">
+        <span class="text-warning font-weight-bold me-3">📁 Danh mục:</span>
+
+        <!-- Nút Tất cả (Hiển thị toàn bộ sản phẩm) -->
+        @Html.ActionLink("Tất cả", "Index", "Home", null, new { @class = "btn btn-outline-light btn-sm me-2 mb-2" })
+
+        @if (Model != null)
+        {
+            foreach (var category in Model)
+            {
+                // Truyền ID của danh mục vào URL để lọc chính xác thể loại sách đó
+                @Html.ActionLink(category.CategoryName, "Index", "Home",
+                    new { categoryId = category.CategoryID },
+                    new { @class = "btn btn-outline-info btn-sm me-2 mb-2" })
+            }
+        }
+    </div>
+</div>

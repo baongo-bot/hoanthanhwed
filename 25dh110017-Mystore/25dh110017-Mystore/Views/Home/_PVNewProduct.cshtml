@@ -1,0 +1,259 @@
+﻿
+@model _25dh110017_Mystore.Models.ViewModel.HomeProductVM
+@using PagedList.Mvc;
+@using PagedList;
+
+<style>
+    .list-container {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 16px !important;
+        padding: 0 !important;
+        margin-top: 15px !important;
+        list-style: none !important;
+    }
+
+    .lproduct-item {
+        background-color: #0b0f19 !important;
+        border: 1px solid rgba(0, 242, 254, 0.3) !important;
+        border-radius: 12px !important;
+        padding: 12px !important;
+        width: calc(20% - 13px) !important;
+        min-width: 180px !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5) !important;
+        transition: all 0.3s ease !important;
+    }
+
+        .lproduct-item:hover {
+            border-color: #00f2fe !important;
+            transform: translateY(-4px) !important;
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.4) !important;
+        }
+
+        .lproduct-item img {
+            width: 100% !important;
+            height: 160px !important;
+            object-fit: cover !important;
+            border-radius: 8px !important;
+            margin-bottom: 10px !important;
+            background-color: #070913 !important;
+        }
+
+    .prodName {
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        color: #f8fafc !important;
+        height: 40px !important;
+        overflow: hidden !important;
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2 !important;
+        -webkit-box-orient: vertical !important;
+        margin-bottom: 6px !important;
+    }
+
+    .prodPrice {
+        font-size: 15px !important;
+        font-weight: bold !important;
+        color: #f43f5e !important;
+        text-shadow: 0 0 6px rgba(244, 63, 94, 0.4) !important;
+        margin-bottom: 4px !important;
+    }
+
+    .prodSale {
+        font-size: 12px !important;
+        color: #94a3b8 !important;
+        margin-bottom: 12px !important;
+    }
+
+    .btn-buy {
+        display: block !important;
+        width: 100% !important;
+        padding: 8px 0 !important;
+        background: linear-gradient(135deg, rgba(0, 242, 254, 0.15) 0%, rgba(59, 130, 246, 0.25) 100%) !important;
+        color: #00f2fe !important;
+        border: 1px solid #00f2fe !important;
+        border-radius: 6px !important;
+        text-align: center !important;
+        font-weight: 600 !important;
+        font-size: 13px !important;
+        text-decoration: none !important;
+        transition: all 0.2s ease !important;
+    }
+
+        .btn-buy:hover {
+            background: linear-gradient(135deg, #00f2fe 0%, #3b82f6 100%) !important;
+            color: #05070e !important;
+            box-shadow: 0 0 12px rgba(0, 242, 254, 0.6) !important;
+        }
+
+    .cyber-title {
+        color: #00f2fe !important;
+        text-shadow: 0 0 10px rgba(0, 242, 254, 0.4);
+        letter-spacing: 0.5px;
+    }
+
+    .pagination-container .pagination {
+        display: inline-flex;
+        padding-left: 0;
+        list-style: none;
+        gap: 5px;
+    }
+
+        .pagination-container .pagination li a,
+        .pagination-container .pagination li span {
+            background-color: #0b0f19;
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            color: #00f2fe;
+            padding: 6px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+
+        .pagination-container .pagination li.active span {
+            background: linear-gradient(135deg, #00f2fe 0%, #3b82f6 100%);
+            color: #05070e;
+            border-color: #00f2fe;
+            font-weight: bold;
+        }
+
+        .pagination-container .pagination li a:hover {
+            background-color: rgba(0, 242, 254, 0.1);
+            border-color: #00f2fe;
+        }
+
+    @@media (max-width: 992px) {
+        .lproduct-item {
+            width: calc(33.333% - 11px) !important;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .lproduct-item {
+            width: calc(50% - 8px) !important;
+            min-width: 0 !important;
+        }
+    }
+</style>
+
+@if (Model != null && Model.NewProducts != null && Model.NewProducts.Any())
+{
+    <section class="container-fluid listProduct my-3 px-0">
+
+        <div class="d-flex align-items-center mb-3">
+            <h3 class="font-weight-bold cyber-title m-0">
+                ⚡ Sản phẩm mới
+            </h3>
+
+            <div class="ms-3 flex-grow-1"
+                 style="height: 1px; background: linear-gradient(90deg, rgba(0, 242, 254, 0.4), transparent); margin-left: 15px;">
+            </div>
+        </div>
+
+        <ul class="list-container">
+
+            @foreach (var product in Model.NewProducts)
+            {
+                string imagePath = product.ProductImage;
+                string imageUrl;
+
+                if (string.IsNullOrWhiteSpace(imagePath))
+                {
+                    imageUrl = Url.Content("~/Images/default.png");
+                }
+                else
+                {
+                    imagePath = imagePath.Trim().Replace("\\", "/");
+
+                    if (imagePath.StartsWith("http://", System.StringComparison.OrdinalIgnoreCase)
+                        || imagePath.StartsWith("https://", System.StringComparison.OrdinalIgnoreCase))
+                    {
+                        imageUrl = imagePath;
+                    }
+                    else if (imagePath.StartsWith("~/"))
+                    {
+                        imageUrl = Url.Content(imagePath);
+                    }
+                    else if (imagePath.StartsWith("/"))
+                    {
+                        imageUrl = imagePath;
+                    }
+                    else if (imagePath.StartsWith("Images/", System.StringComparison.OrdinalIgnoreCase))
+                    {
+                        imageUrl = Url.Content("~/" + imagePath);
+                    }
+                    else
+                    {
+                        imageUrl = Url.Content("~/Images/" + imagePath);
+                    }
+                }
+
+                <li class="lproduct-item">
+
+                    <div>
+                        <a href="@Url.Action("ProductDetail", "Home", new { id = product.ProductID })">
+                            <img src="@imageUrl"
+                                 alt="@product.ProductName"
+                                 onerror="this.onerror=null; this.src='@Url.Content("~/Images/default.png")';" />
+                        </a>
+
+                        <a href="@Url.Action("ProductDetail", "Home", new { id = product.ProductID })"
+                           class="text-decoration-none">
+
+                            <p class="prodName">
+                                @product.ProductName
+                            </p>
+
+                        </a>
+
+                        <p class="prodPrice">
+                            @string.Format("{0:N0} VNĐ", product.ProductPrice)
+                        </p>
+
+                        <p class="prodSale">
+                            ★ 5 • Đã bán
+                            @(product.OrderDetails != null ? product.OrderDetails.Count() : 0)
+                        </p>
+                    </div>
+
+                    <div>
+                        <a href="@Url.Action("AddToCart", "Cart", new { id = product.ProductID })"
+                           class="btn-buy">
+                            🛒 Mua ngay
+                        </a>
+                    </div>
+
+                </li>
+            }
+
+        </ul>
+    </section>
+
+    <div class="pagination-container text-center my-4">
+
+        @Html.PagedListPager(
+                 Model.NewProducts,
+                 page => Url.Action("Index", "Home", new
+                 {
+                     page = page,
+                     categoryId = ViewBag.SelectedCategory,
+                     searchTerm = Model.SearchTerm
+                 })
+             )
+
+    </div>
+}
+else
+{
+    <div class="container text-center my-4 py-4 rounded"
+         style="background-color: #0b0f19; border: 1px solid rgba(0, 242, 254, 0.2);">
+
+        <p class="text-muted mb-0">
+            Không tìm thấy sản phẩm nào phù hợp.
+        </p>
+
+    </div>
+}

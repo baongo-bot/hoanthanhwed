@@ -1,0 +1,39 @@
+﻿@model _25dh110017_Mystore.Models.Order
+
+@{
+    ViewBag.Title = "Xóa đơn hàng #" + Model.OrderID;
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid my-4" style="max-width: 800px;">
+    <h2 class="text-danger font-weight-bold mb-4">⚠️ Xóa Đơn hàng #@Model.OrderID</h2>
+
+    <div class="card bg-dark text-light p-4 shadow-lg" style="border: 1px solid rgba(244, 63, 94, 0.4); background-color: #0b0f19 !important;">
+        <h4 class="text-warning mb-3">Bạn có chắc chắn muốn xóa đơn hàng này không?</h4>
+        <p class="text-muted small">Lưu ý: Thao tác này sẽ xóa vĩnh viễn đơn hàng cũng như toàn bộ chi tiết sản phẩm thuộc đơn hàng này khỏi hệ thống.</p>
+        <hr class="border-secondary" />
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <p><strong>Mã đơn hàng:</strong> #@Model.OrderID</p>
+                <p><strong>Khách hàng:</strong> @(Model.Customer != null ? Model.Customer.CustomerName : "N/A")</p>
+                <p><strong>Ngày đặt hàng:</strong> @Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Địa chỉ giao:</strong> @Model.AddressDelivery</p>
+                <p><strong>Tổng tiền:</strong> <span class="text-danger font-weight-bold">@string.Format("{0:N0} VNĐ", Model.TotalAmount)</span></p>
+                <p><strong>Trạng thái:</strong> <span class="badge bg-warning text-dark">@Model.PaymentStatus</span></p>
+            </div>
+        </div>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="mt-4 pt-3 border-top border-secondary d-flex justify-content-between">
+                @Html.ActionLink("← Hủy bỏ, quay lại", "Index", null, new { @class = "btn btn-outline-light btn-sm" })
+                <input type="submit" value="Xác nhận xóa" class="btn btn-danger font-weight-bold px-4" />
+            </div>
+        }
+    </div>
+</div>

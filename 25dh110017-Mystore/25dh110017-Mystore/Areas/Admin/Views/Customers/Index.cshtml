@@ -1,0 +1,60 @@
+﻿@model IEnumerable<_25dh110017_Mystore.Models.Customer>
+
+@{
+    ViewBag.Title = "Quản lý khách hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid my-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-info font-weight-bold">Danh sách khách hàng</h2>
+    </div>
+
+    <div class="card cyber-panel bg-dark text-light p-3" style="border: 1px solid rgba(0, 242, 254, 0.3); border-radius: 10px;">
+        <table class="table table-dark table-hover table-bordered align-middle mb-0">
+            <thead>
+                <tr class="text-info">
+                    <th class="text-center" style="width: 80px;">Mã KH</th>
+                    <th>Tên khách hàng</th>
+                    <th>Số điện thoại</th>
+                    <th>Email</th>
+                    <th>Địa chỉ</th>
+                    <th class="text-center" style="width: 200px;">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="text-center font-weight-bold">@item.CustomerID</td>
+                            <td>@item.CustomerName</td>
+                            <td>@(item.CustomerPhone ?? "Chưa cập nhật")</td>
+                            <td>@(item.CustomerEmail ?? "Chưa cập nhật")</td>
+                            <td>@(item.CustomerAddress ?? "Chưa cập nhật")</td>
+                            <td class="text-center">
+                                <a href="@Url.Action("Details", "Customers", new { id = item.CustomerID })" class="btn btn-sm btn-outline-info me-1">Chi tiết</a>
+                                <a href="@Url.Action("Edit", "Customers", new { id = item.CustomerID })" class="btn btn-sm btn-outline-warning me-1">Sửa</a>
+                                <a href="@Url.Action("Delete", "Customers", new { id = item.CustomerID })" class="btn btn-sm btn-outline-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa khách hàng này không?');">Xóa</a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">Chưa có dữ liệu khách hàng nào trong hệ thống.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+    .cyber-panel {
+        background-color: #0b0f19 !important;
+        box-shadow: 0 0 15px rgba(0, 242, 254, 0.1);
+    }
+</style>
